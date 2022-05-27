@@ -120,7 +120,7 @@ alter table person add personId int identity(1,1)
 --DDL
 truncate table person
 
-drop table person 
+--drop table person 
 
 -- DML
 
@@ -327,5 +327,233 @@ group by deptname
 
 select city,count(id) as empcount from tblEmp
 group by city
+
+
+-- 27/05/2022
+
+select * from person
+select * from Orders
+
+alter table Orders add productname varchar(20)
+
+alter table Orders add price int
+
+insert into Orders values(1,1001,1,'keyboard',999)
+insert into Orders values(2,1002,1,'mouse',799)
+insert into Orders values(3,1003,5,'laptop',23999)
+insert into Orders values(4,1004,5,'moible',26999)
+insert into Orders values(5,1005,5,'led screen',11999)
+insert into Orders values(6,1006,9,'t-shirt',999)
+insert into Orders values(7,1007,9,'mouse',999)
+
+
+-- 1] Inner Join
+select p.name, p.country, o.orderNo, o.productname, o.price
+from person p
+inner join Orders o on o.personId=p.personId;
+
+
+-- 2] Left Join
+select p.name, p.country, o.orderNo, o.productname, o.price,o.orderId
+from person p
+left join Orders o on o.personId=p.personId;
+
+
+-- 3] Right Join
+select p.name, p.country, o.orderNo, o.productname, o.price,o.orderId
+from person p
+right join Orders o on o.personId=p.personId;
+
+
+-- 4] Full Join
+select p.name, p.country, o.orderNo, o.productname, o.price,o.orderId
+from person p
+full join Orders o on o.personId=p.personId;
+
+
+-- 5] Self Join
+
+create table Manager(
+id int primary key,
+name varchar(20)
+)
+
+select * from tblEmp
+
+alter table tblEmp add managerid int
+
+update tblEmp set managerid=1 where id in(2,3,4,5)
+update tblEmp set managerid=6 where id in(7,8,9,10)
+update tblEmp set managerid=11 where id in(12)
+
+select e1.name as empNane , e2.name as managerName
+from tblEmp e1,tblEmp e2
+where e1.managerid=e2.id
+
+
+
+--
+create table tblStudy(
+studId varchar(5),
+courseId varchar(5),
+year int
+)
+
+select * from tblStudy
+
+insert into tblStudy values('s1','c1',2016)
+insert into tblStudy values('s2','c2',2017)
+insert into tblStudy values('s1','c2',2017)
+
+
+-- find the student id who enroll for different courese with their year
+
+update tblStudy set courseId='c2' where studId='s1' and year=2017
+
+select sa.studId , sa.courseId , sa.year
+from tblStudy sa , tblStudy sb
+where sa.studId=sb.studId and sa.courseId<>sb.courseId and sa.year<>sb.year
+
+
+select s1.studId ,s1.courseId , s1.year
+from tblStudy s1, tblStudy s2
+where s1.studId=s2.studId and s1.courseId<>s2.courseId
+
+
+-- 6] Cross Join
+
+create table
+
+
+
+-- example emp & dept
+alter table tblEmp drop column deptname
+alter table tblEmp add did int
+
+select * from tblEmp
+
+create table dept(
+did int primary key,
+dname varchar(10)
+)
+
+select * from dept
+
+alter table tblEmp 
+add constraint fk_dept_tblEmp foreign key(did) references dept(did)
+
+insert into dept values(1,'HR')
+insert into dept values(2,'Testing ')
+insert into dept values(3,'HR')
+insert into dept values(4,'Developer')
+insert into dept values(5,'Finance')
+insert into dept values(6,'Sales')
+
+update tblEmp set did=1 where id in(2,3,4,5)
+
+update tblEmp set did=5 where id in(7,8,9,10)
+
+update tblEmp set did=3 where id in(1,6)
+
+
+-- 1]inner join
+select e.name,e.salary,d.did,d.dname
+from tblEmp e
+inner join dept d on d.did=e.did
+
+
+select e.name,e.salary,d.did,d.dname
+from tblEmp e 
+inner join dept d on e.did=d.did
+where d.dname='HR'
+
+
+select e.id,e.name,e.salary,d.did,d.dname
+from tblEmp e inner join dept d on e.did=d.did
+where d.dname='HR' order by(salary)
+
+select e.id,e.name,e.salary,d.did,d.dname
+from tblEmp e inner join dept d on e.did=d.did
+where d.dname='HR' order by(salary) desc
+
+
+select e.id,e.name,e.salary,d.did,d.dname
+from tblEmp e inner join dept d on e.did=d.did
+ where d.dname='Hr' order by name
+
+
+ -- Union and Union all
+
+ select city from customer where city='Pune'
+ union
+ select city from supplier where city='Pune'
+
+
+ select city from customer where city='Pune'
+ union all
+ select city from supplier where city='Pune'
+
+
+ -- having clause in sql
+ -- apply condition with aggregate function
+ -- where clause will be not with aggregate function
+
+ select country,count(personid)from person
+ group by country
+ having count(personid)>2
+
+ select country,count(personid) from person
+ group by country
+ having country in('india','usa')
+ order by count(personid)
+
+
+ select dname,count(did) as empcount from dept
+ group by dname
+ having dname in('HR','Sales')
+ order by count(did)
+
+
+ -- SQL Build in functions
+ -- Substring, concat, len, upper,lower ,trim, ltrim,rtrim,round,replace, reverse
+
+ select * from tblEmp
+
+ update tblEmp set salary=34998.99 where id=1
+
+ select SUBSTRING(name,0,3) as tempname from tblEmp where id=7
+
+ select CONCAT(name,'',city) as info from tblEmp
+
+ select name,LEN(name) as length from tblEmp
+
+ select UPPER(name) as name from tblEmp
+
+ select Lower(name) as name from tblEmp
+
+ select Round(345.889,2) as roundValue
+
+  select Round(345.889,0) as roundValue
+
+ select ROUND(salary,1)  as salary from tblEmp where id=1
+
+ select ROUND(salary,0)  as salary from tblEmp where id=1
+
+ select CAST(salary as varchar(20)) from tblEmp -- typecast
+
+ select REVERSE(name) as reverename from tblEmp
+ 
+ select RANK() over (order by salary)as salaryrank from tblEmp
+
+ select replace(name,'A','J') as info from tblEmp where id=1
+ select replace(name,'Shweta','Kangna') as info from tblEmp where id=1
+
+
+ select salary,RANK() over (order by salary desc)as salaryrank from tblEmp
+
+
+
+
+
 
 
