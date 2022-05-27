@@ -24,7 +24,7 @@ insert into Customer values(9,'Shivani','Mosquee',12209,'Arab')
 insert into Customer values(10,'Meghna','Japan',121110,'Berlin')
 insert into Customer values(11,'Neha','NewYork',89000,'London')
 insert into Customer values(12,'Pritesh','Austrelia',99999,'Africa')
-
+insert into Customer values(13,'Jon','France',01234,'Toronto')
 
 
 -- 1]Write a statement that will select the City column from the Customers table
@@ -119,11 +119,24 @@ select PostalCode as Pno from Customer
 select * from Customer as Consumers
 
 -- 28] List the number of customers in each country.
-
+select count(Country) from Customer
 
 -- 29]List the number of customers in each country, ordered by the country with the most customers first.
+select count(Country) from Customer
+group by Country 
 
 
+-- Database testDB
 
+-- Write the correct SQL statement to create a new database called testDB.
 
+Create database testDB
+--Write the correct SQL statement to delete a database named testDB
+drop database testDB
+
+--Add a column of type DATE called Birthday in Persons table
+alter table person add birthday date
+
+ --Delete the column Birthday from the Persons table
+ alter table person drop column Birthday
 
