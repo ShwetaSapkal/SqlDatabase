@@ -557,3 +557,126 @@ from tblEmp e inner join dept d on e.did=d.did
 
 
 
+ --28-05-2022
+
+ -- Subqueries /inner query
+ select max(salary)as maxsalary from tblEmp
+ select name,salary from tblEmp where salary= (select max(salary)as maxsalary from tblEmp)
+
+ -- 2nd highest salary
+ select name,salary from tblEmp where salary=(
+ select max(salary) from tblEmp where salary<>(select max(salary) from tblEmp)
+ )
+ -- 3rd highest salary
+ select name,salary from tblEmp where salary=(
+select max(salary) from tblEmp where salary<(
+select max(salary) from tblEmp where salary<>(select max(salary) from tblEmp)
+)
+)
+
+
+select name,salary from tblEmp where salary=(
+select max(salary) from tblEmp where salary<(
+select max(salary) from tblEmp where salary<>(50000)
+)
+)  
+
+select name,salary from tblEmp where salary=(
+select max(salary) from tblEmp where salary<(
+35000
+)
+)
+
+select name,salary from tblEmp where salary=(
+34998.99
+)  
+
+
+--
+create view highestsalary as
+select name,salary from tblEmp where salary=(
+select max(salary) from tblEmp where salary<(
+select max(salary) from tblEmp where salary<>(select max(salary) from tblEmp)
+)
+)
+
+select * from highestsalary
+
+create view secondhighestsalary as
+select name,salary from tblEmp where salary=(
+ select max(salary) from tblEmp where salary<>(select max(salary) from tblEmp)
+ )
+
+ select * from secondhighestsalary
+
+ --find empid nme whose salary is > 2700
+ 
+ select * from tblEmp where id in
+ (
+ select id from tblEmp where salary>35000
+ )
+
+ select * from Orders
+ select * from  person
+
+ -- display person name who as prchase the product whos price is > 5000
+ 
+ select * from person 
+ select * from Orders
+ select p.name,o.price
+ from person p inner join Orders o on p.personId=o.personId
+ where price>500
+
+
+ -- display name of emp who take higer salary that emp id 5
+
+ select name,salary from tblEmp where salary>(select salary from tblEmp where id=5)
+
+ -- display emp details whose city is same as emp id 4
+ select name,city from tblEmp where city=(select city from tblEmp where id=4)
+
+ -- display employee details whose salary is greater tan the avg salary of all employees
+ select name,city,salary from tblEmp where salary >(select  avg(salary) from tblEmp) 
+
+ --find emp whose salary is greater than avg salary of any dept
+   select name,salary,did from tblEmp
+   where salary >all(select avg(salary) from tblEmp group by did)
+
+
+   -- display sum of salary deptwise
+   select did,sum(salary)as sumsal from tblEmp group by did
+
+   -- display emp who get more than avg  salary of sales dept
+   select name from tblEmp where salary>(select avg(salary) from tblEmp where
+   did=(select did from dept where dname='Finance'))
+
+   select * from tblEmp where did in(select did from dept where dname like 'Finance%')
+   and
+   salary >(select avg(salary) from tblEmp)
+
+
+   select * from tblEmp
+  
+
+ create table dept1(dii int, dname varchar(20))
+ drop table dept1
+  
+
+
+
+  -- subquery eith update stmt
+  --update salary by 30% of emp who work in development dept
+  update tblEmp set salary=salary*0.30 where did=(select did from dept where dname='Development')
+  
+  delete from tblEmp where did=(select did from dept where dname='Sales')
+  
+  -- triggers
+  --insert into Orders select personId from Person where personId= (select personId from Person where personId in(2,3))
+
+
+  alter table tblEmp drop column dname
+  
+  alter table tblEmp add did int
+  select * from dept
+  select * from tblEmp
+
